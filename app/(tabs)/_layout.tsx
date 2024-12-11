@@ -15,7 +15,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="(auth)/profile/"
+        name="profile/index"
         options={{
           title: "Profile",
           tabBarLabel: "Profile",
