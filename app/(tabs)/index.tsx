@@ -1,23 +1,48 @@
-import { View, Text, StyleSheet, Button } from 'react-native';
-import LoginForm from '@/components/LoginForm';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { Button, Provider as PaperProvider, MD3DarkTheme as PaperDarkTheme } from 'react-native-paper';
 import { useSession } from '@/contexts/AuthContext';
+import { useRouter } from 'expo-router';
+import LoginModal from '@/components/LoginModal';
+import RegisterModal from '@/components/RegisterModal';
 
-export default function Tab() {
-const {session, signOut} = useSession();
+export default function HomePage() {
+  const { session, signOut } = useSession();
+  const router = useRouter();
+  const [loginVisible, setLoginVisible] = useState(false);
+  const [registerVisible, setRegisterVisible] = useState(false);
+
+  const showLoginModal = () => setLoginVisible(true);
+  const hideLoginModal = () => setLoginVisible(false);
+
+  const showRegisterModal = () => setRegisterVisible(true);
+  const hideRegisterModal = () => setRegisterVisible(false);
+
+  useEffect(() => {
+    if (session) {
+      router.push('/parts');
+    } else {
+      showLoginModal();
+    }
+  }, [session]);
 
   return (
-    <View style={styles.container}>
-      <Text>Tab Home</Text>
-      {(session) ? (
-         <Button
-         onPress={signOut}
-         title="LogOut"
-         color="blue"
-       />
-      ) : (
-        <LoginForm/>
-      )}
-    </View>
+    <PaperProvider theme={PaperDarkTheme}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Welcome to the Home Page</Text>
+        <LoginModal visible={loginVisible} hideModal={hideLoginModal} showRegisterModal={showRegisterModal} />
+        <RegisterModal visible={registerVisible} hideModal={hideRegisterModal} showLoginModal={showLoginModal} />
+        {!session ? (
+          <Button mode="contained" onPress={showRegisterModal} style={styles.button}>
+            Register
+          </Button>
+        ) : (
+          <Button mode="contained" onPress={signOut} style={styles.button}>
+            Logout
+          </Button>
+        )}
+      </View>
+    </PaperProvider>
   );
 }
 
@@ -26,5 +51,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  button: {
+    marginVertical: 10,
   },
 });

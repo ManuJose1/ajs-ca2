@@ -1,7 +1,13 @@
-export interface FestivalType {
-    _id: string;
+export interface PartType {
     title: string;
-    city: string;
+    price: number;
+    description: string;
+    category: string;
+    subcategory: string;
+}
+
+export interface PartTypeID extends PartType {
+    _id: string;
 }
 
 export interface IAuthConext {
@@ -10,3 +16,10 @@ export interface IAuthConext {
     session?: string | null;
     isLoading: boolean;
 }
+
+export type IResponseType = PartTypeID;
+
+export interface ModalProps {
+    visible: boolean;
+    hideModal: () => void;
+  }
