@@ -7,6 +7,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
+          headerShown: false,
           title: "Home",
           tabBarIcon: ({ color }) => (
             <FontAwesome size={28} name="home" color={color} />
@@ -15,7 +16,8 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="(auth)"
-        options={{       
+        options={{     
+          headerShown: false,  
           tabBarLabel: "Parts",
           tabBarIcon: ({ color }) => (
             <FontAwesome size={28} name="cogs" color={color} />
@@ -25,6 +27,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="cart"
         options={{
+          headerShown: false,
           tabBarLabel: "Cart",
           tabBarIcon: ({ color }) => (
             <FontAwesome size={28} name="shopping-cart" color={color} />

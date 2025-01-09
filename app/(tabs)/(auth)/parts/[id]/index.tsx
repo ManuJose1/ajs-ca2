@@ -6,11 +6,13 @@ import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import { PartTypeID } from '@/types';
 import { Button, Provider as PaperProvider, MD3DarkTheme as PaperDarkTheme } from 'react-native-paper';
 import { useCart } from '@/contexts/CartContext';
+import EditPartModal from '@/components/EditPartModal';
 
 export default function PartDetails() {
   const [part, setPart] = useState<PartTypeID | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [editVisible, setEditVisible] = useState(false);
   const { id } = useLocalSearchParams();
   const { addToCart } = useCart();
   const router = useRouter();
@@ -36,9 +38,27 @@ export default function PartDetails() {
     }
   }, [id]);
 
+  const showEditModal = () => setEditVisible(true); 
+  const hideEditModal = () => setEditVisible(false); 
+
+  const updatePartDetails = (updatedPart: PartTypeID) => { 
+    setPart(updatedPart);
+  };
+
+  const handleDelete = () => {
+    axios.delete(`https://ajs-ca1-carparts.vercel.app/api/parts/${id}`)
+      .then(() => {
+        router.push('/parts');
+      })
+      .catch(e => {
+        console.log(e);
+        setError('Failed to delete part');
+      });
+  };
+
   if (loading) {
     return (
-      <PaperProvider theme={PaperDarkTheme}>
+      <PaperProvider>
         <SafeAreaProvider>
           <SafeAreaView style={styles.container}>
             <ActivityIndicator size="large" color="#0000ff" />
@@ -50,7 +70,7 @@ export default function PartDetails() {
 
   if (error) {
     return (
-      <PaperProvider theme={PaperDarkTheme}>
+      <PaperProvider>
         <SafeAreaProvider>
           <SafeAreaView style={styles.container}>
             <Text>{error}</Text>
@@ -62,7 +82,7 @@ export default function PartDetails() {
 
   if (!part) {
     return (
-      <PaperProvider theme={PaperDarkTheme}>
+      <PaperProvider>
         <SafeAreaProvider>
           <SafeAreaView style={styles.container}>
             <Text>No part found</Text>
@@ -81,7 +101,7 @@ export default function PartDetails() {
   };
 
   return (
-    <PaperProvider theme={PaperDarkTheme}>
+    <PaperProvider>
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
           <Text style={styles.title}>{part.title}</Text>
@@ -90,9 +110,16 @@ export default function PartDetails() {
           <Button mode="contained" onPress={handleAddToCart}>
             Add to Cart
           </Button>
+          <Button mode="outlined" onPress={showEditModal} style={styles.button}>
+            Edit Part
+          </Button>
           <Button mode="outlined" onPress={handleBack} style={styles.button}>
             Back to Parts
           </Button>
+          <Button mode="contained" onPress={handleDelete} style={styles.deleteButton}>
+            Delete Part
+          </Button>
+          <EditPartModal visible={editVisible} hideModal={hideEditModal} updatePartDetails={updatePartDetails} />
         </SafeAreaView>
       </SafeAreaProvider>
     </PaperProvider>
@@ -122,5 +149,9 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 10,
+  },
+  deleteButton: {
+    marginTop: 10,
+    backgroundColor: 'red',
   },
 });

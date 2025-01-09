@@ -19,7 +19,20 @@ export interface IAuthConext {
 
 export type IResponseType = PartTypeID;
 
-export interface ModalProps {
+export interface LoginModalProps {
     visible: boolean;
     hideModal: () => void;
+    showRegisterModal: () => void;
+  }
+
+export interface RegisterModalProps {
+    visible: boolean;
+    hideModal: () => void;
+    showLoginModal: () => void;
+  }
+
+export interface EditPartModalProps {
+    visible: boolean;
+    hideModal: () => void;
+    updatePartDetails: (updatedPart: PartTypeID) => void;
   }

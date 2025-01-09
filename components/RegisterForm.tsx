@@ -1,14 +1,14 @@
-import { Text, StyleSheet } from "react-native";
-import { ChangeEvent, useState } from "react";
+import React, { useState } from "react";
+import { View, StyleSheet } from "react-native";
 import { useSession } from "@/contexts/AuthContext";
 import axios from "axios";
 import {
   TextInput,
   Button,
-  MD3DarkTheme as PaperDarkTheme,
+  Text,
+  DefaultTheme,
   Provider as PaperProvider,
 } from "react-native-paper";
-import { IAuthConext } from "@/types";
 
 export default function RegisterForm() {
   const [form, setForm] = useState({
@@ -17,14 +17,13 @@ export default function RegisterForm() {
     password: "",
   });
 
-  const {signIn} = useSession();
+  const { signIn } = useSession();
+  const [error, setError] = useState<string | undefined>();
 
-  const [error, setError] = useState()
-
-  const handleChange = (e: any) => {
+  const handleChange = (name: string, value: string) => {
     setForm((prevState) => ({
       ...prevState,
-      [e.target.id]: e.target.value,
+      [name]: value,
     }));
   };
 
@@ -49,40 +48,72 @@ export default function RegisterForm() {
   };
 
   return (
-    <PaperProvider>
-      <TextInput
-        placeholder="Full Name"
-        label="Full Name"
-        value={form.full_name}
-        onChange={handleChange}
-        id="full_name"
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Email"
-        label="Email"
-        value={form.email}
-        onChange={handleChange}
-        id="email"
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Password"
-        label="Password"
-        value={form.password}
-        onChange={handleChange}
-        id="password"
-        style={styles.input}
-      />
-      <Text>{error}</Text>
-
-      <Button onPress={handlePress} mode="contained">
-        Submit
-      </Button>
+    <PaperProvider theme={DefaultTheme}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Register</Text>
+        <TextInput
+          label="Full Name"
+          value={form.full_name}
+          onChangeText={(text) => handleChange("full_name", text)}
+          style={styles.input}
+          mode="outlined"
+          theme={DefaultTheme}
+        />
+        <TextInput
+          label="Email"
+          value={form.email}
+          onChangeText={(text) => handleChange("email", text)}
+          style={styles.input}
+          mode="outlined"
+          theme={DefaultTheme}
+        />
+        <TextInput
+          label="Password"
+          value={form.password}
+          onChangeText={(text) => handleChange("password", text)}
+          secureTextEntry
+          style={styles.input}
+          mode="outlined"
+          theme={DefaultTheme}
+        />
+        {error && <Text style={styles.error}>{error}</Text>}
+        <Button mode="contained" onPress={handlePress} style={styles.button}>
+          Register
+        </Button>
+      </View>
     </PaperProvider>
   );
 }
 
 const styles = StyleSheet.create({
-  input: {},
+  container: {
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  input: {
+    marginBottom: 10,
+  },
+  button: {
+    marginTop: 10,
+  },
+  error: {
+    color: 'red',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
 });

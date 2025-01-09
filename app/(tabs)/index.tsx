@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Button, Provider as PaperProvider, MD3DarkTheme as PaperDarkTheme } from 'react-native-paper';
-import { useSession } from '@/contexts/AuthContext';
-import { useRouter } from 'expo-router';
-import LoginModal from '@/components/LoginModal';
-import RegisterModal from '@/components/RegisterModal';
+import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet } from "react-native";
+import {
+  Button,
+  Provider as PaperProvider,
+  MD3DarkTheme as PaperDarkTheme,
+} from "react-native-paper";
+import { useSession } from "@/contexts/AuthContext";
+import { useRouter } from "expo-router";
+import LoginModal from "@/components/LoginModal";
+import RegisterModal from "@/components/RegisterModal";
 
 export default function HomePage() {
   const { session, signOut } = useSession();
@@ -20,22 +24,43 @@ export default function HomePage() {
 
   useEffect(() => {
     if (session) {
-      router.push('/parts');
+      router.push("/parts");
     } else {
       showLoginModal();
     }
   }, [session]);
 
   return (
-    <PaperProvider theme={PaperDarkTheme}>
+    <PaperProvider>
       <View style={styles.container}>
         <Text style={styles.title}>Welcome to the Home Page</Text>
-        <LoginModal visible={loginVisible} hideModal={hideLoginModal} showRegisterModal={showRegisterModal} />
-        <RegisterModal visible={registerVisible} hideModal={hideRegisterModal} showLoginModal={showLoginModal} />
+        <LoginModal
+          visible={loginVisible}
+          hideModal={hideLoginModal}
+          showRegisterModal={showRegisterModal}
+        />
+        <RegisterModal
+          visible={registerVisible}
+          hideModal={hideRegisterModal}
+          showLoginModal={showLoginModal}
+        />
         {!session ? (
-          <Button mode="contained" onPress={showRegisterModal} style={styles.button}>
-            Register
-          </Button>
+          <View>
+            <Button
+              mode="contained"
+              onPress={showLoginModal}
+              style={styles.button}
+            >
+              Login
+            </Button>
+            <Button
+              mode="contained"
+              onPress={showRegisterModal}
+              style={styles.button}
+            >
+              Register
+            </Button>
+          </View>
         ) : (
           <Button mode="contained" onPress={signOut} style={styles.button}>
             Logout
@@ -49,13 +74,13 @@ export default function HomePage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   button: {

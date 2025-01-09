@@ -1,78 +1,93 @@
-import { Text, StyleSheet } from "react-native";
-import { useState } from "react";
-import { useRouter } from "expo-router";
-import { useSession } from "@/contexts/AuthContext";
-import axios from "axios";
-import { TextInput, Button, MD3DarkTheme as PaperDarkTheme, Provider as PaperProvider } from 'react-native-paper';
-import { IAuthConext } from "@/types";
+import React, { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { TextInput, Button, Text, DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { useSession } from '@/contexts/AuthContext';
+import axios from 'axios';
+import { useRouter } from 'expo-router';
 
 export default function LoginForm() {
-    const [form, setForm] = useState({
-        email:"",
-        password:""
-    });
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [error, setError] = useState<string | undefined>();
+  const { signIn } = useSession();
+  const router = useRouter();
 
-    const [error, setError] = useState()
+  const handleChange = (name: string, value: string) => {
+    setForm(prevState => ({ ...prevState, [name]: value }));
+  };
 
-    const {signIn} = useSession();
-    const router = useRouter();
+  const handlePress = () => {
+    axios.post(`https://ajs-ca1-carparts.vercel.app/api/users/login/`, {
+      email: form.email,
+      password: form.password,
+    })
+      .then(response => {
+        signIn(response.data.token);
+        router.push('/parts');
+      })
+      .catch(e => {
+        setError(e.message);
+      });
+  };
 
-    const handleChange = (e:any) => {
-        setForm(prevState => ({
-            ...prevState,
-            [e.target.id]: e.target.value
-        }));
-    }
-
-    const handlePress = () => {
-        console.log("Button Pressed!")
-        axios.post(`https://ajs-ca1-carparts.vercel.app/api/users/login/`,{
-          email: form.email,
-          password: form.password
-        })
-             .then(response => {
-                console.log(response.data.token)
-                signIn(response.data.token);
-                router.push('./(tabs)/(auth)/parts');
-             })
-             .catch(e => {
-                console.log(e);
-                setError(e.message)
-                console.log(e.message)
-                console.log(form)
-             })
-    }
   return (
-    <PaperProvider>
-      <TextInput
-        placeholder="Email"
-        label="Email"
-        value={form.email}
-        onChange={handleChange}
-        id="email"
-        style={styles.input}
-
-      />
-      <TextInput
-        placeholder="Password"
-        label="Password"
-        value={form.password}
-        onChange={handleChange}
-        id="password"
-        style={styles.input}
-      />
-      <Text>{error}</Text>
-
-      <Button onPress={handlePress} mode="contained">
-        Submit
-      </Button>
-
+    <PaperProvider theme={DefaultTheme}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Login</Text>
+        <TextInput
+          label="Email"
+          value={form.email}
+          onChangeText={text => handleChange('email', text)}
+          style={styles.input}
+          mode="outlined"
+          theme={DefaultTheme}
+        />
+        <TextInput
+          label="Password"
+          value={form.password}
+          onChangeText={text => handleChange('password', text)}
+          secureTextEntry
+          style={styles.input}
+          mode="outlined"
+          theme={DefaultTheme}
+        />
+        {error && <Text style={styles.error}>{error}</Text>}
+        <Button mode="contained" onPress={handlePress} style={styles.button}>
+          Login
+        </Button>
+      </View>
     </PaperProvider>
   );
 }
 
 const styles = StyleSheet.create({
-    input:{
-
-    }
-})
+  container: {
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  input: {
+    marginBottom: 10,
+  },
+  button: {
+    marginTop: 10,
+  },
+  error: {
+    color: 'red',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+});

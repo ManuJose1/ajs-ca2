@@ -2,12 +2,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Modal, Portal, Text, Button } from 'react-native-paper';
 import RegisterForm from '@/components/RegisterForm';
-
-interface RegisterModalProps {
-  visible: boolean;
-  hideModal: () => void;
-  showLoginModal: () => void;
-}
+import { RegisterModalProps } from '@/types';
 
 const RegisterModal: React.FC<RegisterModalProps> = ({ visible, hideModal, showLoginModal }) => {
   const handleLogin = () => {
@@ -20,12 +15,12 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ visible, hideModal, showL
       <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modal}>
         <Text style={styles.title}>Register</Text>
         <RegisterForm />
-        <Button mode="contained" onPress={hideModal} style={styles.button}>
-          Close
-        </Button>
         <Text style={styles.text}>Already have an account? Login here.</Text>
         <Button mode="outlined" onPress={handleLogin} style={styles.button}>
           Login
+        </Button>
+        <Button mode="contained" onPress={hideModal} style={styles.button}>
+          Close
         </Button>
       </Modal>
     </Portal>

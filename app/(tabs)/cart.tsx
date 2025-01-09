@@ -18,12 +18,11 @@ export default function Cart() {
   );
 
   const handleCheckout = () => {
-    // Implement checkout logic here
     console.log('Checkout button pressed');
   };
 
   return (
-    <PaperProvider theme={PaperDarkTheme}>
+    <PaperProvider>
       <View style={styles.container}>
         <Text style={styles.header}>Cart</Text>
         {cart.length === 0 ? (

@@ -9,7 +9,7 @@ export default function Layout() {
     <CartProvider>
       <SessionProvider>
         <SafeAreaProvider>
-          <PaperProvider theme={PaperDarkTheme}>
+          <PaperProvider>
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             </Stack>
