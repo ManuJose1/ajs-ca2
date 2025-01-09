@@ -7,12 +7,14 @@ import { Button, Provider as PaperProvider, MD3DarkTheme as PaperDarkTheme } fro
 import PartItem from '@/components/PartItem';
 import { PartTypeID } from '@/types';
 import CreatePartModal from '@/components/CreatePartModal';
+import { Picker } from '@react-native-picker/picker';
 
 export default function Tab() {
   const [parts, setParts] = useState<PartTypeID[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [createVisible, setCreateVisible] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   useEffect(() => {
     axios.get(`https://ajs-ca1-carparts.vercel.app/api/parts`)
@@ -35,9 +37,13 @@ export default function Tab() {
     setParts(prevParts => [...prevParts, newPart]);
   };
 
+  const filteredParts = selectedCategory
+    ? parts.filter(part => part.category === selectedCategory)
+    : parts;
+
   if (loading) {
     return (
-      <PaperProvider>
+      <PaperProvider theme={PaperDarkTheme}>
         <SafeAreaProvider>
           <SafeAreaView style={styles.container}>
             <ActivityIndicator size="large" color="#0000ff" />
@@ -49,7 +55,7 @@ export default function Tab() {
 
   if (error) {
     return (
-      <PaperProvider>
+      <PaperProvider theme={PaperDarkTheme}>
         <SafeAreaProvider>
           <SafeAreaView style={styles.container}>
             <Text>{error}</Text>
@@ -59,24 +65,25 @@ export default function Tab() {
     );
   }
 
-  if (parts.length === 0) {
-    return (
-      <PaperProvider>
-        <SafeAreaProvider>
-          <SafeAreaView style={styles.container}>
-            <Text>No parts available</Text>
-          </SafeAreaView>
-        </SafeAreaProvider>
-      </PaperProvider>
-    );
-  }
-
   return (
-    <PaperProvider>
+    <PaperProvider theme={PaperDarkTheme}>
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
+          <Picker
+            selectedValue={selectedCategory}
+            onValueChange={(itemValue) => setSelectedCategory(itemValue)}
+            style={styles.pickerContainer}
+          >
+            <Picker.Item label="All Categories" value="" />
+            <Picker.Item label="Engine" value="Engine" />
+            <Picker.Item label="Transmission" value="Transmission" />
+            <Picker.Item label="Brakes" value="Brakes" />
+            <Picker.Item label="Suspension" value="Suspension" />
+            <Picker.Item label="Electrical" value="Electrical" />
+            <Picker.Item label="Service Parts" value="Service Parts" />
+          </Picker>
           <FlatList
-            data={parts}
+            data={filteredParts}
             renderItem={({ item }) => <PartItem part={item} />}
             keyExtractor={(part: PartTypeID) => part._id}
           />
@@ -97,10 +104,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
+  picker: {
+    width: '100%',
+    marginBottom: 10,
+  },
   button: {
     marginTop: 20,
   },
   text: {
     marginBottom: 20,
+  },
+  pickerContainer: {
+
+    padding: 10,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
   },
 });

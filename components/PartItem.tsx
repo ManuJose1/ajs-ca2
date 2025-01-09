@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Link } from 'expo-router';
+import { Link } from "expo-router";
 import { PartTypeID } from "@/types";
 
 interface MyProps {
@@ -10,7 +10,8 @@ export default function PartItem({ part }: MyProps) {
   return (
     <TouchableOpacity style={styles.item}>
       <Link href={`/parts/${part._id}`} style={styles.link}>
-      <View>
+        <View>
+          <Text>{part.category}</Text>
           <Text style={styles.title}>{part.title}</Text>
           <Text style={styles.price}>€ {part.price}</Text>
         </View>
@@ -36,16 +37,16 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   link: {
-    textDecorationLine: 'none',
+    textDecorationLine: "none",
   },
   title: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
-    color: '#333',
+    color: "#333",
   },
   price: {
     fontSize: 16,
-    color: '#888',
+    color: "#888",
   },
 });
