@@ -13,14 +13,17 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<PartTypeID[]>([]);
 
+  // Add part to cart
   const addToCart = (part: PartTypeID) => {
     setCart(prevCart => [...prevCart, part]);
   };
 
+  //Rempve a single part from the cart
   const removeFromCart = (id: string) => {
     setCart(prevCart => prevCart.filter(part => part._id !== id));
   };
 
+  // Clear the cart
   const clearCart = () => {
     setCart([]);
   };

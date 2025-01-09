@@ -16,6 +16,7 @@ export default function Tab() {
   const [createVisible, setCreateVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
 
+  //Fetch parts from the API when the page opens
   useEffect(() => {
     axios.get(`https://ajs-ca1-carparts.vercel.app/api/parts`)
       .then(response => {
@@ -30,20 +31,23 @@ export default function Tab() {
       });
   }, []);
 
+  //Show or hide the create part modal
   const showCreateModal = () => setCreateVisible(true);
   const hideCreateModal = () => setCreateVisible(false);
 
+  //Add a new part to the list of parts
   const addPart = (newPart: PartTypeID) => {
     setParts(prevParts => [...prevParts, newPart]);
   };
 
+  //Sort by part category
   const filteredParts = selectedCategory
     ? parts.filter(part => part.category === selectedCategory)
     : parts;
 
   if (loading) {
     return (
-      <PaperProvider theme={PaperDarkTheme}>
+      <PaperProvider>
         <SafeAreaProvider>
           <SafeAreaView style={styles.container}>
             <ActivityIndicator size="large" color="#0000ff" />
@@ -55,7 +59,7 @@ export default function Tab() {
 
   if (error) {
     return (
-      <PaperProvider theme={PaperDarkTheme}>
+      <PaperProvider>
         <SafeAreaProvider>
           <SafeAreaView style={styles.container}>
             <Text>{error}</Text>
@@ -66,7 +70,7 @@ export default function Tab() {
   }
 
   return (
-    <PaperProvider theme={PaperDarkTheme}>
+    <PaperProvider>
       <SafeAreaProvider>
         <SafeAreaView style={styles.container}>
           <Picker

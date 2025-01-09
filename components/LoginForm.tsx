@@ -15,6 +15,7 @@ export default function LoginForm() {
     setForm(prevState => ({ ...prevState, [name]: value }));
   };
 
+  //Send login request to the API and sign in the user
   const handlePress = () => {
     axios.post(`https://ajs-ca1-carparts.vercel.app/api/users/login/`, {
       email: form.email,

@@ -13,6 +13,8 @@ export default function EditPartModal({ visible, hideModal, updatePartDetails }:
   const [form, setForm] = useState({ title: '', price: '', description: '' });
   const { id } = useLocalSearchParams();
 
+
+  //Fetch the part details based on the id from the API when the page opens
   useEffect(() => {
     if (id) {
       axios.get(`https://ajs-ca1-carparts.vercel.app/api/parts/${id}`)
@@ -42,6 +44,7 @@ export default function EditPartModal({ visible, hideModal, updatePartDetails }:
     setForm(prevState => ({ ...prevState, [name]: value }));
   };
 
+  //Send put request to update the part and hide modal
   const handleSubmit = () => {
     if (part) {
       axios.put(`https://ajs-ca1-carparts.vercel.app/api/parts/${id}`, {

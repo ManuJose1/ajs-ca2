@@ -18,6 +18,7 @@ export default function CreatePartForm({ addPart, hideModal }: CreatePartFormPro
     setForm((prevState) => ({ ...prevState, [name]: value }));
   };
 
+  //Send post request to create a new part and hide modal
   const handleSubmit = () => {
     axios
       .post(`https://ajs-ca1-carparts.vercel.app/api/parts`, {

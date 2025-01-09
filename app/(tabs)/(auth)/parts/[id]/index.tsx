@@ -17,6 +17,8 @@ export default function PartDetails() {
   const { addToCart } = useCart();
   const router = useRouter();
 
+  //Fetch the part details based on the id from the API when the page opens
+  //I had to add the !response.data.message check because the API returned a message instead of the data even when the part was found. That issue is now fixed in the API code.
   useEffect(() => {
     if (id) {
       axios.get(`https://ajs-ca1-carparts.vercel.app/api/parts/${id}`)
@@ -38,13 +40,16 @@ export default function PartDetails() {
     }
   }, [id]);
 
+  //Show or hide the edit part modal
   const showEditModal = () => setEditVisible(true); 
   const hideEditModal = () => setEditVisible(false); 
 
+  //Update the part details after editing
   const updatePartDetails = (updatedPart: PartTypeID) => { 
     setPart(updatedPart);
   };
 
+  //Delete the part from the API
   const handleDelete = () => {
     axios.delete(`https://ajs-ca1-carparts.vercel.app/api/parts/${id}`)
       .then(() => {

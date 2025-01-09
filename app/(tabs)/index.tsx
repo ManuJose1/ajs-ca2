@@ -16,6 +16,7 @@ export default function HomePage() {
   const [loginVisible, setLoginVisible] = useState(false);
   const [registerVisible, setRegisterVisible] = useState(false);
 
+  //Show and hide login and register modals
   const showLoginModal = () => setLoginVisible(true);
   const hideLoginModal = () => setLoginVisible(false);
 
